@@ -5,7 +5,7 @@ using mitoSoft.DailyTimers.Core.Helpers;
 namespace mitoSoft.DailyTimers.Tests
 {
     [TestClass]
-    public class StandardRun
+    public class StandardRuns
     {
         [TestMethod]
         public void Run()
@@ -26,7 +26,7 @@ namespace mitoSoft.DailyTimers.Tests
         }
 
         [TestMethod]
-        public void TestIgnoreHolidays()
+        public void IgnoreHolidays()
         {
             var timer = new Timer
             {
