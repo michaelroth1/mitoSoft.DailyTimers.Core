@@ -1,4 +1,4 @@
-# mitoSoft.TimeSwitches.Core
+# mitoSoft.DailyTimers.Core
 A .Net 5.0 library to handle daily timers in .Net projects where you can set one trigger time a days.
 If you want more than one triggering time per day use more than one **'DailyTimer'**.
 
