@@ -11,7 +11,7 @@ namespace mitoSoft.DailyTimers.Core.Helpers
         private DateTime _lastRun;
         private readonly Provinces _state;
 
-        public IDailyTimer Channel { get; private set; }
+        public IDailyTimer Timer { get; private set; }
 
         public Checker(IDailyTimer channel, Provinces state) : this(channel, state, DateTime.Now)
         {
@@ -22,7 +22,7 @@ namespace mitoSoft.DailyTimers.Core.Helpers
             _lastRun = now;
             _state = state;
 
-            Channel = channel;
+            Timer = channel;
         }
 
         public bool CheckChannelState()
@@ -32,7 +32,13 @@ namespace mitoSoft.DailyTimers.Core.Helpers
 
         public bool CheckChannelState(DateTime now)
         {
-            if (Channel.IgnoreOnHolidays && now.IsHoliday(_state))
+            if (!Timer.Active)
+            {
+                _lastRun = now;
+                return false;
+            }
+
+            if (Timer.IgnoreOnHolidays && now.IsHoliday(_state)) //do not trigger on holidays
             {
                 _lastRun = now;
                 return false;
@@ -50,14 +56,9 @@ namespace mitoSoft.DailyTimers.Core.Helpers
             return result;
         }
 
-        //Beispiel
-        //_lastRun = 9:50
-        //trigger = 10:00
-        //now = 10:05
-        //-> true
         private bool IsTimeOverrun(DateTime now)
         {
-            var trigger = new DateTime(now.Year, now.Month, now.Day, Channel.GetHour(), Channel.GetMinute(), 0);
+            var trigger = new DateTime(now.Year, now.Month, now.Day, Timer.GetHour(), Timer.GetMinute(), 0);
             if (_lastRun < trigger && trigger <= now)
             {
                 return true;
@@ -70,31 +71,31 @@ namespace mitoSoft.DailyTimers.Core.Helpers
 
         private bool IsDayOfWeek(DateTime now)
         {
-            if (now.DayOfWeek == DayOfWeek.Monday && Channel.Monday)
+            if (now.DayOfWeek == DayOfWeek.Monday && Timer.Monday)
             {
                 return true;
             }
-            else if (now.DayOfWeek == DayOfWeek.Tuesday && Channel.Tuesday)
+            else if (now.DayOfWeek == DayOfWeek.Tuesday && Timer.Tuesday)
             {
                 return true;
             }
-            else if (now.DayOfWeek == DayOfWeek.Wednesday && Channel.Wednesday)
+            else if (now.DayOfWeek == DayOfWeek.Wednesday && Timer.Wednesday)
             {
                 return true;
             }
-            else if (now.DayOfWeek == DayOfWeek.Thursday && Channel.Thursday)
+            else if (now.DayOfWeek == DayOfWeek.Thursday && Timer.Thursday)
             {
                 return true;
             }
-            else if (now.DayOfWeek == DayOfWeek.Friday && Channel.Friday)
+            else if (now.DayOfWeek == DayOfWeek.Friday && Timer.Friday)
             {
                 return true;
             }
-            else if (now.DayOfWeek == DayOfWeek.Saturday && Channel.Saturday)
+            else if (now.DayOfWeek == DayOfWeek.Saturday && Timer.Saturday)
             {
                 return true;
             }
-            else if (now.DayOfWeek == DayOfWeek.Sunday && Channel.Sunday)
+            else if (now.DayOfWeek == DayOfWeek.Sunday && Timer.Sunday)
             {
                 return true;
             }
